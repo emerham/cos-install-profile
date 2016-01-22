@@ -35,7 +35,7 @@ function research_profile_install() {
   );
   $filtered_html_format = (object) $filtered_html_format;
   filter_format_save($filtered_html_format);
-
+  // Full HTML Text formats
   $full_html_format = array(
     'format' => 'full_html',
     'name' => 'Full HTML',
@@ -61,6 +61,34 @@ function research_profile_install() {
   $full_html_format = (object) $full_html_format;
   filter_format_save($full_html_format);
 
+  $ckeditor_format = array(
+    'format' => 'ckeditor',
+    'name' => 'CKEditor',
+    'weight' => -1,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      'media_filter' => array(
+        'weight' => 5,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $ckeditor_format = (object) $ckeditor_format;
+  filter_format_save($ckeditor_format);
   // Enable some research_profile blocks.
   $default_theme = 'doug_fir';
   $admin_theme = 'adminimal';
@@ -95,6 +123,7 @@ function research_profile_install() {
       'region' => 'content',
       'pages' => '',
       'cache' => -1,
+      'title' => '',
     ),
     array(
       'module' => 'user',
@@ -105,6 +134,18 @@ function research_profile_install() {
       'region' => 'sidebar_first',
       'pages' => '',
       'cache' => -1,
+      'title' => '',
+    ),
+    array(
+      'module' => 'nice_menus',
+      'delta' => '1',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'nav',
+      'pages' => '',
+      'cache' => -1,
+      'title' => '<none>',
     ),
     array(
       'module' => 'system',
@@ -115,6 +156,7 @@ function research_profile_install() {
       'region' => 'content',
       'pages' => '',
       'cache' => -1,
+      'title' => '',
     ),
     array(
       'module' => 'system',
@@ -125,6 +167,7 @@ function research_profile_install() {
       'region' => 'content',
       'pages' => '',
       'cache' => -1,
+      'title' => '',
     ),
     array(
       'module' => 'system',
@@ -135,18 +178,19 @@ function research_profile_install() {
       'region' => 'help',
       'pages' => '',
       'cache' => -1,
+      'title' => '',
     ),
   );
   // drop system / user blocks to ensure correct building
   db_delete('block')->condition('module', 'system')->execute();
   db_delete('block')->condition('module', 'user')->execute();
   // add in our blocks defined above
-  $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache'));
+  $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache', 'title'));
   foreach ($blocks as $block) {
     $query->values($block);
   }
   $query->execute();
-  
+
   // Insert default pre-defined node types into the database. For a complete
   // list of available node type attributes, refer to the node type API
   // documentation at: http://api.drupal.org/api/HEAD/function/hook_node_info.
@@ -344,6 +388,7 @@ function research_profile_install() {
     'video_carousel',
     'feature_story'
   );
+  features_revert($features);
   // CAS settings
   variable_set('cas_server','login.oregonstate.edu');
   variable_set('cas_uri', '/cas');
@@ -359,11 +404,12 @@ function research_profile_install() {
   variable_set('cas_first_login_destination', 'cas');
   // jQuery Updte settings
   variable_set('jquery_update_jquery_version', '1.8');
-  features_revert($features);
   // Nice Menus
   variable_set('nice_menus_menu_1', 'main-menu:0');
   variable_set('nice_menus_type_1', 'down');
   variable_set('nice_menus_name_1', 'Nice menu: Main Menu');
+  variable_set('nice_menus_sf_delay', '800');
+  variable_set('nice_menus_sf_speed', 'fast');
   // ignore any rebuild messages
   node_access_needs_rebuild(FALSE);
   // ignore any other install messages
