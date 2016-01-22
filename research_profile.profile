@@ -22,3 +22,6 @@ if (!function_exists("system_form_install_select_profile_form_alter")) {
     }
   }
 }
+
+!function_exists('profiler_v2') ? require_once('libraries/profiler/profiler.inc') : FALSE;
+profiler_v2('profiler_example');
