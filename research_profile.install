@@ -410,6 +410,48 @@ function research_profile_install() {
   variable_set('nice_menus_name_1', 'Nice menu: Main Menu');
   variable_set('nice_menus_sf_delay', '800');
   variable_set('nice_menus_sf_speed', 'fast');
+  $admin_menu_settings = array (
+    'admin_menu.icon' => true,
+    'admin_menu.menu' => true,
+    'admin_menu.users' => true,
+    'admin_menu.account' => true,
+    'admin_menu.search' => false,
+  );
+  variable_set('admin_menu_components', $admin_menu_settings);
+  // Doug Fir Theme settings
+  $doug_fir_settings = array (
+    "theme_settings" => '',
+    "toggle_logo" => 0,
+    "toggle_name" => 1,
+    "toggle_favicon" => 1,
+    "toggle_main_menu" => 0,
+    "toggle_secondary_menu" => 0,
+    "default_favicon" => 1,
+    "logo" => '',
+    "default_logo" => 0,
+    "logo_path" => '',
+    "logo_upload" => '',
+    "favicon" => '',
+    "favicon_path" => '',
+    "favicon_upload" => '',
+    "variant" => "science",
+    "responsive" => 1,
+    "hide_breadcrumbs" => 0,
+    "hide_book_nav" => 0,
+    "hide_terms" => 0,
+    "custom_ga_code" => '',
+    "parent_site_name" => 'College of Science',
+    "parent_site_url" => 'www.science.oregonstate.edu',
+    "facebook" => '',
+    "youtube-play" => '',
+    "flickr" => '',
+    "linkedin" => '',
+    "twitter" => '',
+    "google-plus" => '',
+    "instagram" => '',
+    "nice_menus_custom_css" => '',
+  );
+  variable_set('theme_doug_fir_settings', $doug_fir_settings);
   // ignore any rebuild messages
   node_access_needs_rebuild(FALSE);
   // ignore any other install messages
