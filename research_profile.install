@@ -1,11 +1,15 @@
 <?php
 /**
+ * @file Install file.
+ *
+ */
+/**
  * Implements hook_install().
  *
  * Perform actions to set up the site for this profile.
  */
 function research_profile_install() {
-  // Add text Formats from Standards Profile
+  // Add text Formats from Standards Profile.
   $filtered_html_format = array(
     'format' => 'filtered_html',
     'name' => 'Filtered HTML',
@@ -35,7 +39,7 @@ function research_profile_install() {
   );
   $filtered_html_format = (object) $filtered_html_format;
   filter_format_save($filtered_html_format);
-  // Full HTML Text formats
+  // Full HTML Text formats.
   $full_html_format = array(
     'format' => 'full_html',
     'name' => 'Full HTML',
@@ -60,7 +64,7 @@ function research_profile_install() {
   );
   $full_html_format = (object) $full_html_format;
   filter_format_save($full_html_format);
-
+  // CKEditor text format.
   $ckeditor_format = array(
     'format' => 'ckeditor',
     'name' => 'CKEditor',
@@ -89,21 +93,121 @@ function research_profile_install() {
   );
   $ckeditor_format = (object) $ckeditor_format;
   filter_format_save($ckeditor_format);
+  // WYSIWYG settings.
+  $wysiwyg_options = array(
+    'default' => 1,
+    'user_choose' => 0,
+    'show_toggle' => 1,
+    'theme' => 'advanced',
+    'language' => 'en',
+    'buttons' =>
+      array(
+        'default' =>
+          array(
+            'Bold' => 1,
+            'Italic' => 1,
+            'Underline' => 1,
+            'Strike' => 1,
+            'JustifyLeft' => 1,
+            'JustifyCenter' => 1,
+            'JustifyRight' => 1,
+            'JustifyBlock' => 1,
+            'BidiLtr' => 1,
+            'BidiRtl' => 1,
+            'BulletedList' => 1,
+            'NumberedList' => 1,
+            'Outdent' => 1,
+            'Indent' => 1,
+            'Undo' => 1,
+            'Redo' => 1,
+            'Link' => 1,
+            'Unlink' => 1,
+            'Anchor' => 1,
+            'Image' => 1,
+            'TextColor' => 1,
+            'BGColor' => 1,
+            'Superscript' => 1,
+            'Subscript' => 1,
+            'Blockquote' => 1,
+            'Source' => 1,
+            'HorizontalRule' => 1,
+            'Cut' => 1,
+            'Copy' => 1,
+            'Paste' => 1,
+            'PasteText' => 1,
+            'PasteFromWord' => 1,
+            'ShowBlocks' => 1,
+            'RemoveFormat' => 1,
+            'SpecialChar' => 1,
+            'Format' => 1,
+            'Font' => 1,
+            'FontSize' => 1,
+            'Styles' => 1,
+            'Table' => 1,
+            'SelectAll' => 1,
+            'Find' => 1,
+            'Replace' => 1,
+            'Smiley' => 1,
+            'CreateDiv' => 1,
+            'Iframe' => 1,
+            'Maximize' => 1,
+            'SpellChecker' => 1,
+            'Scayt' => 1,
+            'About' => 1,
+            'Templates' => 1,
+          ),
+        'imce' =>
+          array(
+            'imce' => 1,
+          ),
+        'aspell' =>
+          array(
+            'SpellCheck' => 1,
+          ),
+        'drupal' =>
+          array(
+            'media' => 1,
+            'break' => 1,
+          ),
+      ),
+    'toolbar_loc' => 'top',
+    'toolbar_align' => 'left',
+    'path_loc' => 'bottom',
+    'resizing' => 1,
+    'default_toolbar_grouping' => 1,
+    'verify_html' => 1,
+    'preformatted' => 1,
+    'convert_fonts_to_spans' => 1,
+    'remove_linebreaks' => 1,
+    'apply_source_formatting' => 1,
+    'paste_auto_cleanup_on_paste' => 1,
+    'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
+    'css_setting' => 'theme',
+    'css_path' => '',
+    'css_classes' => '',
+  );
+  db_insert('wysiwyg')
+    ->fields(array(
+      'format' => 'ckeditor',
+      'editor' => 'ckeditor',
+      'settings' => serialize($wysiwyg_options),
+    ))
+    ->execute();
   // Enable some research_profile blocks.
   $default_theme = 'doug_fir';
   $admin_theme = 'adminimal';
-  // disable all themes
+  // Disable all themes.
   db_update('system')
     ->fields(array('status' => 0))
     ->condition('type', 'theme')
     ->execute();
-  // enable $default_theme
+  // Enable $default_theme.
   db_update('system')
     ->fields(array('status' => 1))
     ->condition('type', 'theme')
     ->condition('name', $default_theme)
     ->execute();
-  // enable $admin_theme
+  // Enable $admin_theme.
   db_update('system')
     ->fields(array('status' => 1))
     ->condition('type', 'theme')
@@ -111,9 +215,21 @@ function research_profile_install() {
     ->execute();
   variable_set('theme_default', $default_theme);
   variable_set('admin_theme', $admin_theme);
-  // activate admin theme when editing a node
+  // Activate admin theme when editing a node.
   variable_set('node_admin_theme', '1');
   $blocks = array(
+    array(
+      'module' => 'menu',
+      'delta' => 'osu-top-hat',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'top',
+      'visibility' => 0,
+      'pages' => '',
+      'cache' => -1,
+      'title' => '',
+    ),
     array(
       'module' => 'system',
       'delta' => 'main',
@@ -121,18 +237,56 @@ function research_profile_install() {
       'status' => 1,
       'weight' => 0,
       'region' => 'content',
+      'visibility' => 0,
       'pages' => '',
       'cache' => -1,
       'title' => '',
     ),
     array(
-      'module' => 'user',
-      'delta' => 'login',
+      'module' => 'system',
+      'delta' => 'navigation',
       'theme' => $default_theme,
       'status' => 1,
       'weight' => 0,
       'region' => 'sidebar_first',
+      'visibility' => 0,
       'pages' => '',
+      'cache' => -1,
+      'title' => '',
+    ),
+    array(
+      'module' => 'cas_redirect',
+      'delta' => 'login_cas_redirect',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'footer',
+      'visibility' => 0,
+      'pages' => '',
+      'cache' => -1,
+      'title' => '',
+    ),
+    array(
+      'module' => 'views',
+      'delta' => 'video_view-block_1',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'pre_footer',
+      'visibility' => 1,
+      'pages' => '<front>',
+      'cache' => -1,
+      'title' => '',
+    ),
+    array(
+      'module' => 'views',
+      'delta' => 'feature_story-block',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'features',
+      'visibility' => 1,
+      'pages' => '<front>',
       'cache' => -1,
       'title' => '',
     ),
@@ -143,6 +297,7 @@ function research_profile_install() {
       'status' => 1,
       'weight' => 0,
       'region' => 'nav',
+      'visibility' => 0,
       'pages' => '',
       'cache' => -1,
       'title' => '<none>',
@@ -153,7 +308,8 @@ function research_profile_install() {
       'theme' => $default_theme,
       'status' => 1,
       'weight' => -10,
-      'region' => 'content',
+      'region' => 'help',
+      'visibility' => 0,
       'pages' => '',
       'cache' => -1,
       'title' => '',
@@ -165,6 +321,7 @@ function research_profile_install() {
       'status' => 1,
       'weight' => 0,
       'region' => 'content',
+      'visibility' => 0,
       'pages' => '',
       'cache' => -1,
       'title' => '',
@@ -176,16 +333,29 @@ function research_profile_install() {
       'status' => 1,
       'weight' => 0,
       'region' => 'help',
+      'visibility' => 0,
       'pages' => '',
       'cache' => -1,
       'title' => '',
     ),
   );
-  // drop system / user blocks to ensure correct building
+  // Drop system / user blocks to ensure correct building.
   db_delete('block')->condition('module', 'system')->execute();
   db_delete('block')->condition('module', 'user')->execute();
-  // add in our blocks defined above
-  $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache', 'title'));
+  // Add in our blocks defined above.
+  $query = db_insert('block')->fields(
+    array(
+      'module',
+      'delta',
+      'theme',
+      'status',
+      'weight',
+      'region',
+      'visibility',
+      'pages',
+      'cache',
+      'title',
+    ));
   foreach ($blocks as $block) {
     $query->values($block);
   }
@@ -197,9 +367,18 @@ function research_profile_install() {
   $types = array(
     array(
       'type' => 'page',
-      'name' => st('Page'),
+      'name' => st('Basic page'),
       'base' => 'node_content',
-      'description' => st("Use <em>pages</em> for basic page content."),
+      'description' => st("Use <em>Basic page</em> for basic page content."),
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+    ),
+    array(
+      'type' => 'article',
+      'name' => st('Article'),
+      'base' => 'node_content',
+      'description' => st('Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'),
       'custom' => 1,
       'modified' => 1,
       'locked' => 0,
@@ -219,6 +398,20 @@ function research_profile_install() {
       'bundle' => 'page',
       'mapping' => array(
         'rdftype' => array('foaf:Document'),
+      ),
+    ),
+    array(
+      'type' => 'node',
+      'bundle' => 'article',
+      'mapping' => array(
+        'field_image' => array(
+          'predicates' => array('og:image', 'rdfs:seeAlso'),
+          'type' => 'rel',
+        ),
+        'field_tags' => array(
+          'predicates' => array('dc:subject'),
+          'type' => 'rel',
+        ),
       ),
     ),
   );
@@ -282,7 +475,6 @@ function research_profile_install() {
     ),
   );
   field_create_instance($instance);
-
 
   // Create an image field named "Image", enabled for the 'article' content type.
   // Many of the following values will be defaulted, they're included here as an illustrative examples.
@@ -350,6 +542,14 @@ function research_profile_install() {
     ),
   );
   field_create_instance($instance);
+  variable_set('comment_article', '1');
+  variable_set('comment_page', '1');
+  variable_set('comment_biblio', '1');
+  variable_set('comment_feature_story', '1');
+  variable_set('comment_feed', '1');
+  variable_set('comment_video', '1');
+  variable_set('comment_webform', '1');
+  variable_set('comment_people_osu', '1');
   // Create a Home link in the main menu.
   $item = array(
     'link_title' => st('Home'),
@@ -357,7 +557,7 @@ function research_profile_install() {
     'menu_name' => 'main-menu',
   );
   menu_link_save($item);
-  // From shortcut.install, add shortcuts to the default set on install
+  // From shortcut.install, add shortcuts to the default set on install.
   $shortcut_set = shortcut_set_load(SHORTCUT_DEFAULT_SET_NAME);
   $shortcut_set->links = NULL;
   $shortcut_set->links = array(
@@ -367,7 +567,8 @@ function research_profile_install() {
       'weight' => -17,
     ),
   );
-  shortcut_set_save($shortcut_set);// Create a default role for site administrators, with all available permissions assigned.
+  shortcut_set_save($shortcut_set);
+  // Create a default role for site administrators, with all available permissions assigned.
   $admin_role = new stdClass();
   $admin_role->name = 'administrator';
   $admin_role->weight = 10;
@@ -380,19 +581,247 @@ function research_profile_install() {
   db_insert('users_roles')
     ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
     ->execute();
+  // Add User Roles.
+  // Site Admin Permissions.
+  $site_admin_perms = array(
+    'access administration menu',
+    'access administration pages',
+    'access all views',
+    'access all webform results',
+    'access broken links report',
+    'access content overview',
+    'access contextual links',
+    'access own broken links report',
+    'access own webform results',
+    'access own webform submissions',
+    'access protected node overview page',
+    'access protected node password form',
+    'access site in maintenance mode',
+    'access site reports',
+    'access user profiles',
+    'add media from remote sources',
+    'administer biblio',
+    'administer blocks',
+    'administer cas redirect',
+    'administer code per node',
+    'administer content types',
+    'administer image styles',
+    'administer linkchecker',
+    'administer media',
+    'administer menu',
+    'administer nodeaccess',
+    'administer nodes',
+    'administer pathauto',
+    'administer rules',
+    'administer site configuration',
+    'administer taxonomy',
+    'administer url aliases',
+    'administer users',
+    'administer views',
+    'administer workbench',
+    'bypass node access',
+    'configure top hat',
+    'create article content',
+    'create biblio content',
+    'create feed',
+    'create feed content',
+    'create page content',
+    'create url aliases',
+    'create webform content',
+    'customize shortcut links',
+    'delete all webform submissions',
+    'delete any article content',
+    'delete any biblio content',
+    'delete any feed content',
+    'delete any page content',
+    'delete any webform content',
+    'delete own article content',
+    'delete own biblio content',
+    'delete own feed content',
+    'delete own page content',
+    'delete own webform content',
+    'delete own webform submissions',
+    'delete revisions',
+    'delete terms in 1',
+    'edit all webform submissions',
+    'edit any article content',
+    'edit any biblio content',
+    'edit any feed content',
+    'edit any page content',
+    'edit any protected node password',
+    'edit any webform content',
+    'edit biblio authors',
+    'edit by all biblio authors',
+    'edit css per block',
+    'edit css per node',
+    'edit feed',
+    'edit javascript per block',
+    'edit javascript per node',
+    'edit link settings',
+    'edit media',
+    'edit own article content',
+    'edit own biblio content',
+    'edit own comments',
+    'edit own feed content',
+    'edit own page content',
+    'edit own webform content',
+    'edit own webform submissions',
+    'edit page password',
+    'edit protected content',
+    'edit terms in 1',
+    'edit webform components',
+    'export taxonomy by csv',
+    'flush caches',
+    'grant deletable node permissions',
+    'grant editable node permissions',
+    'grant node permissions',
+    'grant own node permissions',
+    'import from file',
+    'import taxonomy by csv',
+    'revert revisions',
+    'switch shortcut sets',
+    'use text format ckeditor',
+    'use text format full_html',
+    'view advanced help index',
+    'view advanced help popup',
+    'view advanced help topic',
+    'view date repeats',
+    'view own unpublished content',
+    'view protected content',
+    'view revisions',
+    'view the administration theme',
+  );
+  // Site Admin Role.
+  $site_admin = new stdClass();
+  $site_admin->name = 'Site Admin';
+  $site_admin->weight = 9;
+  user_role_save($site_admin);
+  user_role_grant_permissions($site_admin->rid, $site_admin_perms);
+
+  // Graduate Student Permissions.
+  $grad_stu_perms = array(
+    'access administration menu',
+    'access administration pages',
+    'access contextual links',
+    'access own broken links report',
+    'access own webform results',
+    'access own webform submissions',
+    'access site in maintenance mode',
+    'access site reports',
+    'access user profiles',
+    'add media from remote sources',
+    'administer biblio',
+    'administer image styles',
+    'administer menu',
+    'administer taxonomy',
+    'create article content',
+    'create biblio content',
+    'create feature_story content',
+    'create feed',
+    'create feed content',
+    'create page content',
+    'create people_osu content',
+    'create url aliases',
+    'create webform content',
+    'customize shortcut links',
+    'delete own article content',
+    'delete own biblio content',
+    'delete own feature_story content',
+    'delete own feed content',
+    'delete own page content',
+    'delete own people_osu content',
+    'delete own webform content',
+    'delete own webform submissions',
+    'edit css per block',
+    'edit css per node',
+    'edit feed',
+    'edit javascript per block',
+    'edit javascript per node',
+    'edit media',
+    'edit own article content',
+    'edit own biblio content',
+    'edit own comments',
+    'edit own feature_story content',
+    'edit own feed content',
+    'edit own page content',
+    'edit own people_osu content',
+    'edit own webform content',
+    'edit own webform submissions',
+    'edit protected content',
+    'edit terms in 1',
+    'edit webform components',
+    'flush caches',
+    'import from file',
+    'revert revisions',
+    'switch shortcut sets',
+    'use text format ckeditor',
+    'use text format full_html',
+    'view advanced help index',
+    'view advanced help popup',
+    'view advanced help topic',
+    'view date repeats',
+    'view own unpublished content',
+    'view protected content',
+    'view revisions',
+    'view the administration theme',
+  );
+  // Graduate Student Role.
+  $grad_stu = new stdClass();
+  $grad_stu->name = 'Grad Student';
+  $grad_stu->weight = 8;
+  user_role_save($grad_stu);
+  user_role_grant_permissions($grad_stu->rid, $grad_stu_perms);
+  // Authenticated Users Permissions.
+  $auth_user_perm = array(
+    'access biblio content',
+    'access comments',
+    'access content',
+    'access own webform submissions',
+    'access protected node password form',
+    'access workbench',
+    'post comments',
+    'search content',
+    'show download links',
+    'show export links',
+    'show filter tab',
+    'show own download links',
+    'show sort links',
+    'skip comment approval',
+    'use advanced search',
+    'use text format filtered_html',
+    'view date repeats',
+    'view full text',
+    'view media',
+    'view protected content',
+  );
+  // Update Auth user perms.
+  user_role_grant_permissions('2', $auth_user_perm);
+  // Anonymous Permissions.
+  $anon_perms = array(
+    'access biblio content',
+    'access comments',
+    'access content',
+    'access protected node password form',
+    'search content',
+    'use text format filtered_html',
+    'view date repeats',
+    'view media',
+  );
+  // Update annon perms.
+  user_role_grant_permissions('1', $anon_perms);
   // Update the menu router information.
   menu_rebuild();
-  // revert features to ensure they are all installed
+  // Revert features to ensure they are all installed.
   $features = array(
     'cosine_varnish_cache_purge',
     'video_carousel',
-    'feature_story'
+    'feature_story',
   );
   features_revert($features);
-  // CAS settings
-  variable_set('cas_server','login.oregonstate.edu');
+  // CAS settings.
+  variable_set('cas_server', 'login.oregonstate.edu');
   variable_set('cas_uri', '/cas');
-  variable_set('cas_login_form', '3');
+  variable_set('cas_login_form', '2');
   variable_set('cas_login_drupal_invite', 'Cancel ONID login');
   variable_set('cas_login_invite', 'Login USING ONID');
   variable_set('cas_login_drupal_invite', 'Cancel ONID login');
@@ -402,24 +831,25 @@ function research_profile_install() {
   variable_set('cas_version', 'S1');
   variable_set('cas_domain', 'oregonstate.edu');
   variable_set('cas_first_login_destination', 'cas');
-  // jQuery Updte settings
+  // jQuery Updte settings.
   variable_set('jquery_update_jquery_version', '1.8');
-  // Nice Menus
+  // Nice Menus.
   variable_set('nice_menus_menu_1', 'main-menu:0');
   variable_set('nice_menus_type_1', 'down');
   variable_set('nice_menus_name_1', 'Nice menu: Main Menu');
   variable_set('nice_menus_sf_delay', '800');
   variable_set('nice_menus_sf_speed', 'fast');
-  $admin_menu_settings = array (
-    'admin_menu.icon' => true,
-    'admin_menu.menu' => true,
-    'admin_menu.users' => true,
-    'admin_menu.account' => true,
-    'admin_menu.search' => false,
+  // Admin Menu Settings.
+  $admin_menu_settings = array(
+    'admin_menu.icon' => TRUE,
+    'admin_menu.menu' => TRUE,
+    'admin_menu.users' => TRUE,
+    'admin_menu.account' => TRUE,
+    'admin_menu.search' => FALSE,
   );
   variable_set('admin_menu_components', $admin_menu_settings);
-  // Doug Fir Theme settings
-  $doug_fir_settings = array (
+  // Doug Fir Theme settings.
+  $doug_fir_settings = array(
     "theme_settings" => '',
     "toggle_logo" => 0,
     "toggle_name" => 1,
@@ -452,8 +882,18 @@ function research_profile_install() {
     "nice_menus_custom_css" => '',
   );
   variable_set('theme_doug_fir_settings', $doug_fir_settings);
-  // ignore any rebuild messages
+  // URL Patterns.
+  variable_set('pathauto_node_article_pattern', 'articles/[node:title]');
+  variable_set('pathauto_node_feature_story_pattern', 'stories/[node:title]');
+  variable_set('pathauto_node_feed_pattern', 'feeds/[node:title]');
+  variable_set('pathauto_node_video_pattern', 'videos/[node:title]');
+  variable_set('pathauto_node_webform_pattern', 'forms/[node:title]');
+  variable_set('pathauto_node_biblio_pattern', '');
+  variable_set('pathauto_node_page_pattern', '');
+  // Add users.
+
+  // Ignore any rebuild messages.
   node_access_needs_rebuild(FALSE);
-  // ignore any other install messages
+  // Ignore any other install messages.
   drupal_get_messages();
 }
