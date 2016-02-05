@@ -95,6 +95,8 @@ dependencies[] = media_internet
 dependencies[] = media_mediaspace
 dependencies[] = media_vimeo
 dependencies[] = media_youtube
+; Menu Importer
+dependencies[] = menu_import
 ; Node export
 dependencies[] = node_export
 ; OSU
