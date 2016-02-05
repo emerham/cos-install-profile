@@ -612,6 +612,7 @@ function research_profile_install() {
     'administer nodeaccess',
     'administer nodes',
     'administer pathauto',
+    'administer permissions',
     'administer rules',
     'administer site configuration',
     'administer taxonomy',
@@ -623,22 +624,31 @@ function research_profile_install() {
     'configure top hat',
     'create article content',
     'create biblio content',
+    'create feature_story content',
     'create feed',
     'create feed content',
+    'create people_osu content',
     'create page content',
     'create url aliases',
+    'create video content',
     'create webform content',
     'customize shortcut links',
     'delete all webform submissions',
     'delete any article content',
     'delete any biblio content',
+    'delete any feature_story content',
     'delete any feed content',
     'delete any page content',
+    'delete any people_osu content',
+    'delete any video content',
     'delete any webform content',
     'delete own article content',
     'delete own biblio content',
     'delete own feed content',
+    'delete own feature_story content',
     'delete own page content',
+    'delete own people_osu content',
+    'delete own video content',
     'delete own webform content',
     'delete own webform submissions',
     'delete revisions',
@@ -646,9 +656,12 @@ function research_profile_install() {
     'edit all webform submissions',
     'edit any article content',
     'edit any biblio content',
+    'edit any feature_story content',
     'edit any feed content',
     'edit any page content',
+    'edit any people_osu content',
     'edit any protected node password',
+    'edit any video content',
     'edit any webform content',
     'edit biblio authors',
     'edit by all biblio authors',
@@ -663,7 +676,10 @@ function research_profile_install() {
     'edit own biblio content',
     'edit own comments',
     'edit own feed content',
+    'edit own feature_story content',
     'edit own page content',
+    'edit own people_osu content',
+    'edit own video content',
     'edit own webform content',
     'edit own webform submissions',
     'edit page password',
@@ -722,6 +738,7 @@ function research_profile_install() {
     'create page content',
     'create people_osu content',
     'create url aliases',
+    'create video content',
     'create webform content',
     'customize shortcut links',
     'delete own article content',
@@ -730,6 +747,7 @@ function research_profile_install() {
     'delete own feed content',
     'delete own page content',
     'delete own people_osu content',
+    'delete own video content',
     'delete own webform content',
     'delete own webform submissions',
     'edit css per block',
@@ -745,6 +763,7 @@ function research_profile_install() {
     'edit own feed content',
     'edit own page content',
     'edit own people_osu content',
+    'edit own video content',
     'edit own webform content',
     'edit own webform submissions',
     'edit protected content',
@@ -831,6 +850,7 @@ function research_profile_install() {
   variable_set('cas_version', 'S1');
   variable_set('cas_domain', 'oregonstate.edu');
   variable_set('cas_first_login_destination', 'cas');
+  variable_set('cas_user_register', '0');
   // jQuery Updte settings.
   variable_set('jquery_update_jquery_version', '1.8');
   // Nice Menus.
@@ -890,8 +910,13 @@ function research_profile_install() {
   variable_set('pathauto_node_webform_pattern', 'forms/[node:title]');
   variable_set('pathauto_node_biblio_pattern', '');
   variable_set('pathauto_node_page_pattern', '');
-  // Add users.
-
+  variable_set('pathauto_node_people_osu_pattern', 'people/[node:title]');
+  // TODO add taxonomy imports
+  // http://cgit.drupalcode.org/recruiter/tree/recruiter.install_vocabularies.inc
+  // drush taxocsv-import /var/www/drupal7/profiles/research_profile/content/position_titles.csv  flat --vocabulary_id=position_titles --enclosure='"' --vocabulary_target=existing
+  // drush taxocsv-import /var/www/drupal7/profiles/research_profile/content/primary_categorization.csv   flat --vocabulary_id=primary_categorization --enclosure='"' --vocabulary_target=existing
+  // drush ne-import --file=/var/www/drupal7/profiles/research_profile/content/node-data.export
+  // drush vset site_frontpage node/1
   // Ignore any rebuild messages.
   node_access_needs_rebuild(FALSE);
   // Ignore any other install messages.
