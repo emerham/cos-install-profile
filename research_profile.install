@@ -52,12 +52,12 @@ function research_profile_install() {
       ),
       // Line break filter.
       'filter_autop' => array(
-        'weight' => 1,
+        'weight' => 3,
         'status' => 1,
       ),
       // HTML corrector filter.
       'filter_htmlcorrector' => array(
-        'weight' => 10,
+        'weight' => 2,
         'status' => 1,
       ),
     ),
@@ -77,7 +77,7 @@ function research_profile_install() {
       ),
       // Line break filter.
       'filter_autop' => array(
-        'weight' => 1,
+        'weight' => 7,
         'status' => 1,
       ),
       'media_filter' => array(
@@ -86,7 +86,7 @@ function research_profile_install() {
       ),
       // HTML corrector filter.
       'filter_htmlcorrector' => array(
-        'weight' => 10,
+        'weight' => 6,
         'status' => 1,
       ),
     ),
