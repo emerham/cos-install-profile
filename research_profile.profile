@@ -36,18 +36,18 @@ if (!function_exists("system_form_install_select_profile_form_alter")) {
  */
 function research_profile_install_tasks($install_state) {
   $tasks = array(
-    'research_profile_path_auto' => array(
-      'display_name' => st("Configure Path auto for Content Types"),
-      'function' => 'research_profile_path_auto',
-    ),
-    'research_profile_theme' => array(
-      'display_name' => st('Configure Doug Fir Theme'),
-      'function' => 'research_profile_theme',
-    ),
-    'research_profile_permissions' => array(
-      'display_name' => st('Configure Site Permissions'),
-      'function' => 'research_profile_perms',
-    ),
+//    'research_profile_path_auto' => array(
+//      'display_name' => st("Configure Path auto for Content Types"),
+//      'function' => 'research_profile_path_auto',
+//    ),
+//    'research_profile_theme' => array(
+//      'display_name' => st('Configure Doug Fir Theme'),
+//      'function' => 'research_profile_theme',
+//    ),
+//    'research_profile_permissions' => array(
+//      'display_name' => st('Configure Site Permissions'),
+//      'function' => 'research_profile_perms',
+//    ),
 
   );
   return $tasks;
