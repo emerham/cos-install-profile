@@ -16,6 +16,7 @@ if (!function_exists("system_form_install_configure_form_alter")) {
     $form['admin_account']['account']['name']['#default_value'] = 'cosine';
     $form['admin_account']['account']['mail']['#default_value'] = 'web@science.oregonstate.edu';
     $form['server_settings']['site_default_country']['#default_value'] = 'US';
+    $form['server_settings']['date_default_timezone']['#default_value'] = 'America/Los_Angeles';
   }
 }
 
@@ -47,6 +48,14 @@ function research_profile_install_tasks($install_state) {
     'research_profile_permissions' => array(
       'display_name' => st('Configure Site Permissions'),
       'function' => 'research_profile_perms',
+    ),
+    'research_profile_front_page_custom' => array(
+      'display_name' => st('Add default home page'),
+      'function' => 'research_profile_front_page_custom',
+    ),
+    'research_profile_add_extra_content' => array(
+      'display_name' => st('Extra Content to add'),
+      'type' => 'form',
     ),
 
   );
@@ -353,6 +362,253 @@ function research_profile_doug_fir() {
  */
 
 function research_profile_path_auto() {
-
+  // URL Patterns.
+  variable_set('pathauto_node_article_pattern', 'articles/[node:title]');
+  variable_set('pathauto_node_feature_story_pattern', 'stories/[node:title]');
+  variable_set('pathauto_node_feed_pattern', 'feeds/[node:title]');
+  variable_set('pathauto_node_video_pattern', 'videos/[node:title]');
+  variable_set('pathauto_node_webform_pattern', 'forms/[node:title]');
+  variable_set('pathauto_node_biblio_pattern', '');
+  variable_set('pathauto_node_page_pattern', '');
+  variable_set('pathauto_node_people_osu_pattern', 'people/[node:title]');
 }
 
+function research_profile_front_page_custom() {
+  // Home
+  $body = '<h3>Welcome to your new Drupal site</h3>';
+  $body .= '<p>This is your front page, <strong>do not</strong> delete it.';
+  $body .= 'You can edit this page, remove this content, and add your own.';
+  $body .= '<p>To learn more about building your site, visit our <a href="http://oregonstate.edu/cws/training/book/drupal-deep-dive/osu-drupal-6">Drupal Training Materials</a>.</p>';
+
+  $node = new stdClass();
+
+  //Main Node Fields
+  $node->name = 'Home';
+  $node->title = $node->name;
+  $node->type = 'page'; //This can be any node type
+  $node->created = strtotime('now');
+  $node->changed = $node->created;
+  $node->promote = 0; // Display on front page ? 1 : 0
+  $node->sticky = 0; // Display top of page ? 1 : 0
+  $node->status = 1; // Published ? 1 : 0
+  $node->language = 'en';
+  $node->uid = 0;
+
+  $node->body['und'][0]['format'] = 'ckeditor';
+  $node->body['und'][0]['value'] = $body;
+  //$node->og_group_ref['und'][0]['target_id']  = $gid;
+
+  node_save($node);
+
+  // Set this has the front page
+  variable_set('site_frontpage', 'node/' . $node->nid);
+
+  /*
+    // Drupal7 creates the alias to this new node as content/home
+    // We want to change it to just home
+    $res = db_update('url_alias')
+      ->fields(array('alias' => 'home'))
+      ->condition('alias', 'content/home')
+      ->execute();
+  */
+  drupal_set_message(t('The default pages have been created.'));
+}
+
+function research_profile_add_extra_content() {
+  $form = array();
+  $form['into'] = array(
+    '#markup' => '<p>' . st('Check the box if you wish to add extra default content') . '</p>',
+  );
+  $my_content_options = array(
+    'lab' => st('The Lab'),
+    'video' => st('Videos'),
+    'feat_story' => st('Feature Story'),
+    'contact' => st('Contact us'),
+    'bib' => st('Biblio Link'),
+  );
+  $form['profile_extra'] = array(
+    '#type' => 'checkboxes',
+    '#title' => st('What extra content to you want to create?'),
+    '#description' => st(''),
+    '#options' => $my_content_options,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => st('Continue'),
+  );
+  return $form;
+}
+
+/**
+ * Implements hook_submit().
+ * @param $form
+ * @param $form_state
+ */
+function research_profile_add_extra_content_submit($form, &$form_state) {
+  $boxes_checked = $form_state['values']['profile_extra'];
+  foreach ($boxes_checked as $content_options) {
+    switch ($content_options) {
+      case 'video':
+        break;
+      case 'lab':
+        research_profile_content_lab();
+        break;
+      case 'feat_story':
+        break;
+      case 'contact':
+        research_profile_content_contact();
+        break;
+      case 'bib':
+        $my_menu = array(
+          'link_path' => 'biblio',
+          'link_title' => st('Publications'),
+          'menu_name' => 'main-menu',
+          'weight' => 19,
+          'language' => 'en',
+          'plid' => 0,
+          'module' => 'menu',
+        );
+        menu_link_save($my_menu);
+        unset($my_menu);
+        break;
+      default:
+        continue;
+        break;
+    }
+  }
+}
+
+/**
+ * Create The Lab node page
+ */
+function research_profile_content_lab() {
+  // The Body of the Node
+  $body = '<p>Here I will post photos and descriptions of our experimental tool and capabilities. </p>';
+
+  $node = new stdClass();
+
+  //The Lab Page
+  $node->name = 'The Lab';
+  $node->title = $node->name;
+  $node->type = 'page'; //This can be any node type
+  $node->created = strtotime('now');
+  $node->changed = $node->created;
+  $node->promote = 0; // Display on front page ? 1 : 0
+  $node->sticky = 0; // Display top of page ? 1 : 0
+  $node->status = 1; // Published ? 1 : 0
+  $node->language = 'en';
+  $node->uid = 0;
+
+  $node->body['und'][0]['format'] = 'ckeditor';
+  $node->body['und'][0]['value'] = $body;
+  //$node->og_group_ref['und'][0]['target_id']  = $gid;
+
+  node_save($node);
+  // Create menu link for the node
+  $my_menu = array(
+    'link_path' => 'node/' . $node->nid,
+    'link_title' => st('The Lab'),
+    'menu_name' => 'main-menu',
+    'weight' => 19,
+    'language' => $node->language,
+    'plid' => 0,
+    'module' => 'menu',
+  );
+  menu_link_save($my_menu);
+  unset($body, $node, $my_menu);
+}
+
+/**
+ * Create the Conteact us webform
+ */
+function research_profile_content_contact() {
+  $body = '<p>Please contanct us with any questions.</p>';
+  $node = new stdClass();
+  $node->type = 'webform';
+  node_object_prepare($node);
+  $node->title = 'Contact Us';
+  $node->language = 'en';
+  $node->body[LANGUAGE_NONE][0]['value'] = $body;
+  $node->body[LANGUAGE_NONE][0]['format'] = 'ckeditor';
+  $node->uid = 1;
+  $node->promote = 0;
+  $node->comment = 0;
+
+  // Create the webform components.
+  $components = array(
+    array(
+      'name' => 'Full Name',
+      'form_key' => 'name',
+      'type' => 'textfield',
+      'required' => TRUE,
+      'weight' => 5,
+      'pid' => 0,
+      'extra' => array(
+        'title_display' => 'above',
+        'private' => 0,
+      ),
+    ),
+    array(
+      'name' => 'Email address',
+      'form_key' => 'email_address',
+      'type' => 'email',
+      'required' => TRUE,
+      'weight' => 6,
+      'pid' => 0,
+      'extra' => array(
+        'title_display' => 'above',
+        'private' => 0,
+      ),
+    ),
+    array(
+      'name' => 'Comments/Questions',
+      'form_key' => 'comment_question',
+      'type' => 'textarea',
+      'required' => TRUE,
+      'weight' => 7,
+      'pid' => 0,
+      'extra' => array(
+        'title_display' => 'above',
+        'private' => 0,
+      ),
+    ),
+  );
+
+  // Attach the webform to the node.
+  $node->webform = array(
+    'confirmation' => '',
+    'confirmation_format' => NULL,
+    'redirect_url' => '',
+    'status' => '1',
+    'block' => '0',
+    'teaser' => '0',
+    'allow_draft' => '0',
+    'auto_save' => '0',
+    'submit_notice' => '1',
+    'submit_text' => '',
+    'submit_limit' => '-1', // User can submit more than once.
+    'submit_interval' => '-1',
+    'total_submit_limit' => '-1',
+    'total_submit_interval' => '-1',
+    'record_exists' => TRUE,
+    'roles' => array(
+      0 => '1', // Anonymous user can submit this webform.
+    ),
+    'emails' => '',
+    'components' => $components,
+  );
+  // Save the node.
+  node_save($node);
+  // Create menu link for the node
+  $my_menu = array(
+    'link_path' => 'node/' . $node->nid,
+    'link_title' => st('Contact Us'),
+    'menu_name' => 'main-menu',
+    'weight' => 20,
+    'language' => $node->language,
+    'plid' => 0,
+    'module' => 'menu',
+  );
+  menu_link_save($my_menu);
+  unset($node, $body, $my_menu);
+}
