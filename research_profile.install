@@ -621,12 +621,11 @@ function research_profile_install() {
     'admin_menu.search' => FALSE,
   );
   variable_set('admin_menu_components', $admin_menu_settings);
-  // TODO add taxonomy imports
+  // TODO add imports
   // http://cgit.drupalcode.org/recruiter/tree/recruiter.install_vocabularies.inc
   // drush taxocsv-import /var/www/drupal7/profiles/research_profile/content/position_titles.csv  flat --vocabulary_id=position_titles --enclosure='"' --vocabulary_target=existing
   // drush taxocsv-import /var/www/drupal7/profiles/research_profile/content/primary_categorization.csv   flat --vocabulary_id=primary_categorization --enclosure='"' --vocabulary_target=existing
   // drush ne-import --file=/var/www/drupal7/profiles/research_profile/content/node-data.export
-  // drush vset site_frontpage node/1
   // Ignore any rebuild messages.
   node_access_needs_rebuild(FALSE);
   // Ignore any other install messages.
