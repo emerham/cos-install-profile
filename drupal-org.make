@@ -1,4 +1,4 @@
-; research_profile make file for d.o. usage
+; cos make file for d.o. usage
 core = "7.x"
 api = "2"
 

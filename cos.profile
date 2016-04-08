@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Research Profile, Profile file.
+ * COS Profile, Profile file.
  */
 
 if (!function_exists("system_form_install_configure_form_alter")) {
@@ -11,7 +11,7 @@ if (!function_exists("system_form_install_configure_form_alter")) {
    * Allows the profile to alter the site configuration form.
    */
   function system_form_install_configure_form_alter(&$form, $form_state) {
-    $form['site_information']['site_name']['#default_value'] = 'Research Profile';
+    $form['site_information']['site_name']['#default_value'] = 'Drupal COS';
     $form['site_information']['site_mail']['#default_value'] = 'web@science.oregonstate.edu';
     $form['admin_account']['account']['name']['#default_value'] = 'cosine';
     $form['admin_account']['account']['mail']['#default_value'] = 'web@science.oregonstate.edu';
@@ -28,33 +28,37 @@ if (!function_exists("system_form_install_select_profile_form_alter")) {
    */
   function system_form_install_select_profile_form_alter(&$form, $form_state) {
     foreach ($form['profile'] as $key => $element) {
-      $form['profile'][$key]['#value'] = 'research_profile';
+      $form['profile'][$key]['#value'] = 'cos';
     }
   }
 }
 /**
  * Implements hook_install_tasks().
  */
-function research_profile_install_tasks($install_state) {
+function cos_install_tasks($install_state) {
   $tasks = array(
-    'research_profile_path_auto' => array(
+    'cos_path_auto' => array(
       'display_name' => st("Configure Path auto for Content Types"),
-      'function' => 'research_profile_path_auto',
+      'function' => 'cos_path_auto',
     ),
-    'research_profile_doug_fir' => array(
+    'cos_doug_fir' => array(
       'display_name' => st('Configure Doug Fir Theme'),
-      'function' => 'research_profile_doug_fir',
+      'function' => 'cos_doug_fir',
     ),
-    'research_profile_permissions' => array(
+    'cos_permissions' => array(
       'display_name' => st('Configure Site Permissions'),
-      'function' => 'research_profile_perms',
+      'function' => 'cos_perms',
     ),
-    'research_profile_front_page_custom' => array(
+    'cos_front_page_custom' => array(
       'display_name' => st('Add default home page'),
-      'function' => 'research_profile_front_page_custom',
+      'function' => 'cos_front_page_custom',
     ),
-    'research_profile_add_extra_content' => array(
+    'cos_add_extra_content' => array(
       'display_name' => st('Extra Content to add'),
+      'type' => 'form',
+    ),
+    'cos_add_onid' => array(
+      'display_name' => st('Add ONID Users'),
       'type' => 'form',
     ),
 
@@ -66,7 +70,7 @@ function research_profile_install_tasks($install_state) {
  * Configure Permissions and roles for a site.
  */
 
-function research_profile_perms() {
+function cos_perms() {
   // Add User Roles.
   // Site Admin Permissions.
   $site_admin_perms = array(
@@ -320,7 +324,7 @@ function research_profile_perms() {
  * Setup Doug Fir Theme.
  */
 
-function research_profile_doug_fir() {
+function cos_doug_fir() {
   // Doug Fir Theme settings.
   $doug_fir_settings = array(
     "theme_settings" => '',
@@ -361,7 +365,7 @@ function research_profile_doug_fir() {
  * Setup Path Auto aliases.
  */
 
-function research_profile_path_auto() {
+function cos_path_auto() {
   // URL Patterns.
   variable_set('pathauto_node_article_pattern', 'articles/[node:title]');
   variable_set('pathauto_node_feature_story_pattern', 'stories/[node:title]');
@@ -373,7 +377,7 @@ function research_profile_path_auto() {
   variable_set('pathauto_node_people_osu_pattern', 'people/[node:title]');
 }
 
-function research_profile_front_page_custom() {
+function cos_front_page_custom() {
   // Home
   $body = '<h3>Welcome to your new Drupal site</h3>';
   $body .= '<p>This is your front page, <strong>do not</strong> delete it.';
@@ -392,7 +396,7 @@ function research_profile_front_page_custom() {
   $node->sticky = 0; // Display top of page ? 1 : 0
   $node->status = 1; // Published ? 1 : 0
   $node->language = 'en';
-  $node->uid = 0;
+  $node->uid = 1;
 
   $node->body['und'][0]['format'] = 'ckeditor';
   $node->body['und'][0]['value'] = $body;
@@ -414,14 +418,13 @@ function research_profile_front_page_custom() {
   drupal_set_message(t('The default pages have been created.'));
 }
 
-function research_profile_add_extra_content() {
+function cos_add_extra_content() {
   $form = array();
   $form['into'] = array(
     '#markup' => '<p>' . st('Check the box if you wish to add extra default content') . '</p>',
   );
   $my_content_options = array(
     'lab' => st('The Lab'),
-    'video' => st('Videos'),
     'feat_story' => st('Feature Story'),
     'contact' => st('Contact us'),
     'bib' => st('Biblio Link'),
@@ -444,19 +447,20 @@ function research_profile_add_extra_content() {
  * @param $form
  * @param $form_state
  */
-function research_profile_add_extra_content_submit($form, &$form_state) {
+function cos_add_extra_content_submit($form, &$form_state) {
   $boxes_checked = $form_state['values']['profile_extra'];
   foreach ($boxes_checked as $content_options) {
     switch ($content_options) {
       case 'video':
+        //cos_content_video();
         break;
       case 'lab':
-        research_profile_content_lab();
+        cos_content_lab();
         break;
       case 'feat_story':
         break;
       case 'contact':
-        research_profile_content_contact();
+        cos_content_contact();
         break;
       case 'bib':
         $my_menu = array(
@@ -472,7 +476,6 @@ function research_profile_add_extra_content_submit($form, &$form_state) {
         unset($my_menu);
         break;
       default:
-        continue;
         break;
     }
   }
@@ -481,7 +484,7 @@ function research_profile_add_extra_content_submit($form, &$form_state) {
 /**
  * Create The Lab node page
  */
-function research_profile_content_lab() {
+function cos_content_lab() {
   // The Body of the Node
   $body = '<p>Here I will post photos and descriptions of our experimental tool and capabilities. </p>';
 
@@ -521,7 +524,7 @@ function research_profile_content_lab() {
 /**
  * Create the Conteact us webform
  */
-function research_profile_content_contact() {
+function cos_content_contact() {
   $body = '<p>Please contanct us with any questions.</p>';
   $node = new stdClass();
   $node->type = 'webform';
@@ -610,5 +613,64 @@ function research_profile_content_contact() {
     'module' => 'menu',
   );
   menu_link_save($my_menu);
-  unset($node, $body, $my_menu);
+  unset($body, $node, $my_menu);
+}
+
+/**
+ * This adds more videos than it should
+ */
+function cos_content_video() {
+  $body = '<p>Chris Marshall, curator of OSU\'s arthropod collection, takes us on an early morning journey to find an elusive scarab, a northwestern rain beetle.</p>';
+  $node = new stdClass();
+  $node->type = 'video';
+  //node_object_prepare($node);
+  $node->title = 'Chris Marshall, Beetles ';
+  $node->language = 'en';
+  $node->body[LANGUAGE_NONE][0]['value'] = $body;
+  $node->body[LANGUAGE_NONE][0]['format'] = 'ckeditor';
+  $node->uid = 1;
+  $node->promote = 0;
+  $node->comment = 0;
+  $node->field_video[LANGUAGE_NONE][0]['fid'] = NULL;
+  $node->field_video[LANGUAGE_NONE][0]['uid'] = 3;
+  $node->field_video[LANGUAGE_NONE][0]['filename'] = 'Searching for Rain Beetles with Chris Marshall';
+  $node->field_video[LANGUAGE_NONE][0]['uri'] = 'youtube://v/eclWC1knmU0';
+  $node->field_video[LANGUAGE_NONE][0]['filemime'] = 'video/youtube';
+  $node->field_video[LANGUAGE_NONE][0]['type'] = 'video';
+  $node->field_video[LANGUAGE_NONE][0]['display'] = 1;
+
+  node_save($node);
+  unset($node);
+}
+
+/**
+ * Implements hook_form().
+ */
+function cos_add_onid(){
+  $form = array();
+  $form['into'] = array(
+    '#markup' => '<p>' . st('Enter ONID names to add to the site') . '</p>',
+  );
+  $cosine_defaults = array('brabhamm', 'dinsmorc', 'haagensa');
+  $form['onid_admin'] = array(
+    '#type' => 'textarea',
+    '#title' => st('Full Site Admins'),
+    '#required' => TRUE,
+    '#default_value' => implode('\n', $cosine_defaults),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => st('Continue'),
+  );
+  return $form;
+}
+/**
+ * Implements hook_form_submit().
+ */
+function cos_add_onid_submit($form, &$form_state){
+  require_once(drupal_get_path('module', 'cas') . '/cas.batch.inc');
+  $cas_oid = preg_split('/[\n\r|\r|\n]+/', $form_state['values']['onid_admin']);
+  foreach($cas_oid as $oid){
+    cas_batch_user_add($oid);
+  }
 }
