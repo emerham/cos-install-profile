@@ -656,7 +656,7 @@ function cos_add_onid() {
     '#type' => 'textarea',
     '#title' => st('Full Site Admins'),
     '#required' => TRUE,
-    '#default_value' => implode('/\n', $cosine_defaults),
+    '#default_value' => implode("\r\n", $cosine_defaults),
   );
   $form['onid_site_admin'] = array(
     '#type' => 'textarea',
