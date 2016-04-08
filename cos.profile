@@ -26,7 +26,7 @@ if (!function_exists("system_form_install_select_profile_form_alter")) {
    *
    * Select the current install profile by default.
    */
-  function system_form_install_select_profile_form_alter(&$form, $form_state) {
+  function cos_system_form_install_select_profile_form_alter(&$form, $form_state) {
     foreach ($form['profile'] as $key => $element) {
       $form['profile'][$key]['#value'] = 'cos';
     }
@@ -522,7 +522,7 @@ function cos_content_lab() {
 }
 
 /**
- * Create the Conteact us webform
+ * Create the Contact us webform
  */
 function cos_content_contact() {
   $body = '<p>Please contanct us with any questions.</p>';
@@ -646,7 +646,7 @@ function cos_content_video() {
 /**
  * Implements hook_form().
  */
-function cos_add_onid(){
+function cos_add_onid() {
   $form = array();
   $form['into'] = array(
     '#markup' => '<p>' . st('Enter ONID names to add to the site') . '</p>',
@@ -656,7 +656,13 @@ function cos_add_onid(){
     '#type' => 'textarea',
     '#title' => st('Full Site Admins'),
     '#required' => TRUE,
-    '#default_value' => implode('\n', $cosine_defaults),
+    '#default_value' => implode('/\n', $cosine_defaults),
+  );
+  $form['onid_site_admin'] = array(
+    '#type' => 'textarea',
+    '#title' => st('Site Admins'),
+    '#required' => FALSE,
+    '#description' => st('Enter the ONID Usernames, enter delemeted to add')
   );
   $form['submit'] = array(
     '#type' => 'submit',
@@ -664,13 +670,32 @@ function cos_add_onid(){
   );
   return $form;
 }
+
 /**
  * Implements hook_form_submit().
+ * Takes name from the form and creates Drupal Accounts for each.
+ * Adds roles to newly created accounts.
  */
-function cos_add_onid_submit($form, &$form_state){
-  require_once(drupal_get_path('module', 'cas') . '/cas.batch.inc');
+function cos_add_onid_submit($form, &$form_state) {
+  require_once(drupal_get_path('module', 'cas') . '/cas.module');
   $cas_oid = preg_split('/[\n\r|\r|\n]+/', $form_state['values']['onid_admin']);
-  foreach($cas_oid as $oid){
-    cas_batch_user_add($oid);
+  $cos_admin = user_role_load_by_name('administrator');
+  $options = array(
+    'invoke_cas_user_presave' => TRUE,
+  );
+  foreach ($cas_oid as $oid) {
+    // Returns the Object of the user created, don't need to load by name.
+    $user = cas_user_register($oid, $options);
+    //$user = user_load_by_name($oid);
+    user_multiple_role_edit(array($user->uid), 'add_role', $cos_admin->rid);
   }
+  unset($user, $oid, $cos_admin);
+  $cas_oid_site = preg_split('/[\n\r|\r|\n]+/', $form_state['values']['onid_site_admin']);
+  $cos_site_admin = user_role_load_by_name('Site Admin');
+  foreach ($cas_oid_site as $oid) {
+    $user = cas_user_register($oid, array());
+    user_multiple_role_edit(array($user->uid), 'add_role', $cos_site_admin->rid);
+  }
+  unset($user, $oid, $cas_oid_site);
+  drupal_set_message(st('Added OIND Users to the site'));
 }
