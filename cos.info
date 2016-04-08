@@ -1,6 +1,6 @@
-; Packaging information for research_profile
-name = "Research Profile"
-description = "This profile will be used for Research based sites."
+; Packaging information for cos profile
+name = "College of Science Profile"
+description = "This profile will be used for Standard College of Science Sites."
 core = "7.x"
 ; ----------
 ; Dependencies

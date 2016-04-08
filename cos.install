@@ -8,7 +8,7 @@
  *
  * Perform actions to set up the site for this profile.
  */
-function research_profile_install() {
+function cos_install() {
   // Add text Formats from Standards Profile.
   $filtered_html_format = array(
     'format' => 'filtered_html',
@@ -193,7 +193,7 @@ function research_profile_install() {
       'settings' => serialize($wysiwyg_options),
     ))
     ->execute();
-  // Enable some research_profile blocks.
+  // Enable some cos blocks.
   $default_theme = 'doug_fir';
   $admin_theme = 'adminimal';
   // Disable all themes.
@@ -623,9 +623,9 @@ function research_profile_install() {
   variable_set('admin_menu_components', $admin_menu_settings);
   // TODO add imports
   // http://cgit.drupalcode.org/recruiter/tree/recruiter.install_vocabularies.inc
-  // drush taxocsv-import /var/www/drupal7/profiles/research_profile/content/position_titles.csv  flat --vocabulary_id=position_titles --enclosure='"' --vocabulary_target=existing
-  // drush taxocsv-import /var/www/drupal7/profiles/research_profile/content/primary_categorization.csv   flat --vocabulary_id=primary_categorization --enclosure='"' --vocabulary_target=existing
-  // drush ne-import --file=/var/www/drupal7/profiles/research_profile/content/node-data.export
+  // drush taxocsv-import /var/www/drupal7/profiles/cos/content/position_titles.csv  flat --vocabulary_id=position_titles --enclosure='"' --vocabulary_target=existing
+  // drush taxocsv-import /var/www/drupal7/profiles/cos/content/primary_categorization.csv   flat --vocabulary_id=primary_categorization --enclosure='"' --vocabulary_target=existing
+  // drush ne-import --file=/var/www/drupal7/profiles/cos/content/node-data.export
   // Ignore any rebuild messages.
   node_access_needs_rebuild(FALSE);
   // Ignore any other install messages.
