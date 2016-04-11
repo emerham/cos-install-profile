@@ -382,7 +382,7 @@ function cos_front_page_custom() {
   $body = '<h3>Welcome to your new Drupal site</h3>';
   $body .= '<p>This is your front page, <strong>do not</strong> delete it.';
   $body .= 'You can edit this page, remove this content, and add your own.';
-  $body .= '<p>To learn more about building your site, visit our <a href="http://oregonstate.edu/cws/training/book/drupal-deep-dive/osu-drupal-6">Drupal Training Materials</a>.</p>';
+  $body .= '<p>To learn more about building your site, visit our <a href="http://oregonstate.edu/cws/training/view/training-materials">Drupal Training Materials</a>.</p>';
 
   $node = new stdClass();
 
