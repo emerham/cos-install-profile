@@ -115,6 +115,7 @@ dependencies[] = linkchecker
 dependencies[] = nice_menus
 dependencies[] = node_adoption
 dependencies[] = pathauto
+dependencies[] = redirect
 dependencies[] = token
 ; Path Breadcrumbs
 dependencies[] = path_breadcrumbs
