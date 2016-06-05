@@ -151,6 +151,9 @@ projects[expire][subdir] = "contrib"
 projects[purge][version] = "1.7"
 projects[purge][subdir] = "contrib"
 
+projects[redirect][version] = "1.0-rc3"
+projectspredirect][subdir] = "redirect"
+
 projects[rules][version] = "2.9"
 projects[rules][subdir] = "contrib"
 
