@@ -16,21 +16,21 @@ CoS Profile as extra install tasks, they are
 <li>Add ONID</li>
 </ul>
 
-##### COS Path Auto #####
+#### COS Path Auto ####
 Add path auto settings for different content types
 
-##### COS Doug Fir #####
+#### COS Doug Fir ####
 Set settings for Doug Fir theme for COS
 
-##### COS Permissions #####
+#### COS Permissions ####
 Setup Roles and Permissions to be used in the site
 
-##### Front Page #####
+#### Front Page ####
 Create a Front page node to be used as the Home Page
 
-##### Extra Content #####
+#### Extra Content ####
 Provide a checklist for extra default content to be added to the site
 
-##### Add ONID #####
+#### Add ONID ####
 Utilizing CAS, we have two text areas to add ONID UID's for two roles,
 administer and site admin.
