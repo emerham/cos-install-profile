@@ -1,0 +1,45 @@
+; cos make file for local development
+core = "7.x"
+api = "2"
+
+projects[drupal][version] = "7.x"
+; include the d.o. profile base
+includes[] = "drupal-org.make"
+
+; +++++ Libraries +++++
+
+; fullcalendar
+libraries[fullcalendar][directory_name] = "fullcalendar"
+libraries[fullcalendar][type] = "library"
+libraries[fullcalendar][destination] = "libraries"
+libraries[fullcalendar][download][type] = "get"
+libraries[fullcalendar][download][url] = "" ; TODO add download URI
+
+; CAS
+libraries[CAS][directory_name] = "CAS"
+libraries[CAS][type] = "library"
+libraries[CAS][destination] = "libraries"
+libraries[CAS][download][type] = "get"
+libraries[CAS][download][url] = "" ; TODO add download URI
+
+; codemirror
+libraries[codemirror][directory_name] = "codemirror"
+libraries[codemirror][type] = "library"
+libraries[codemirror][destination] = "libraries"
+libraries[codemirror][download][type] = "get"
+libraries[codemirror][download][url] = "" ; TODO add download URI
+
+; jquery.jcarousel
+libraries[jquery.jcarousel][directory_name] = "jquery.jcarousel"
+libraries[jquery.jcarousel][type] = "library"
+libraries[jquery.jcarousel][destination] = "libraries"
+libraries[jquery.jcarousel][download][type] = "get"
+libraries[jquery.jcarousel][download][url] = "" ; TODO add download URI
+
+; jquery.cycle
+libraries[jquery.cycle][directory_name] = "jquery.cycle"
+libraries[jquery.cycle][type] = "library"
+libraries[jquery.cycle][destination] = "libraries"
+libraries[jquery.cycle][download][type] = "get"
+libraries[jquery.cycle][download][url] = "" ; TODO add download URI
+

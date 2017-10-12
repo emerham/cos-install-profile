@@ -1,0 +1,156 @@
+; Packaging information for cos profile
+name = "College of Science Profile"
+description = "This profile will be used for Standard College of Science Sites."
+core = "7.x"
+; ----------
+; Dependencies
+; ----------
+; Access
+dependencies[] = protected_node
+; Access control
+dependencies[] = nodeaccess
+; Administration
+dependencies[] = admin_menu
+dependencies[] = adminimal_admin_menu
+dependencies[] = module_filter
+; Biblio
+dependencies[] = biblio
+dependencies[] = biblio_bibtex
+dependencies[] = biblio_pm
+dependencies[] = biblio_xml
+; CCK
+dependencies[] = cck
+; Central Authentication Service
+dependencies[] = cas
+dependencies[] = cas_attributes
+dependencies[] = cas_redirect
+; Chaos tool suite
+dependencies[] = ctools
+; Core
+dependencies[] = block
+dependencies[] = color
+dependencies[] = comment
+dependencies[] = contextual
+dependencies[] = dblog
+dependencies[] = field
+dependencies[] = field_sql_storage
+dependencies[] = field_ui
+dependencies[] = file
+dependencies[] = filter
+dependencies[] = help
+dependencies[] = image
+dependencies[] = list
+dependencies[] = menu
+dependencies[] = node
+dependencies[] = number
+dependencies[] = options
+dependencies[] = path
+dependencies[] = php
+dependencies[] = rdf
+dependencies[] = search
+dependencies[] = shortcut
+dependencies[] = system
+dependencies[] = taxonomy
+dependencies[] = text
+dependencies[] = update
+dependencies[] = user
+; Date/Time
+dependencies[] = date
+dependencies[] = date_all_day
+dependencies[] = date_api
+dependencies[] = date_popup
+dependencies[] = date_repeat
+dependencies[] = date_repeat_field
+dependencies[] = date_tools
+dependencies[] = date_views
+; Features extra
+dependencies[] = fe_block
+; Fields
+dependencies[] = conditional_fields
+dependencies[] = email
+dependencies[] = entityreference
+dependencies[] = field_group
+dependencies[] = link
+dependencies[] = phone
+; Form Elements
+dependencies[] = hierarchical_select
+dependencies[] = hs_taxonomy
+; Input filters
+dependencies[] = pathfilter
+; Live Feeds
+dependencies[] = live_feeds
+dependencies[] = osu_announcements
+dependencies[] = osu_events
+dependencies[] = osu_news
+dependencies[] = osu_wordpress
+; Media
+dependencies[] = file_entity
+dependencies[] = imce
+dependencies[] = imce_mkdir
+dependencies[] = media
+dependencies[] = media_internet
+dependencies[] = media_mediaspace
+dependencies[] = media_vimeo
+dependencies[] = media_youtube
+; Menu Importer
+dependencies[] = menu_import
+; Node export
+dependencies[] = node_export
+; OSU
+dependencies[] = osu_search
+dependencies[] = osu_top_hat
+; Other
+dependencies[] = advanced_help
+dependencies[] = block_titlelink
+dependencies[] = colorbox
+dependencies[] = cpn
+dependencies[] = diff
+dependencies[] = entity
+dependencies[] = entity_token
+dependencies[] = footer_message
+dependencies[] = invisimail
+dependencies[] = job_scheduler
+dependencies[] = libraries
+dependencies[] = linkchecker
+dependencies[] = nice_menus
+dependencies[] = node_adoption
+dependencies[] = pathauto
+dependencies[] = redirect
+dependencies[] = token
+; Path Breadcrumbs
+dependencies[] = path_breadcrumbs
+; Performance and scalability
+dependencies[] = expire
+dependencies[] = purge
+; Rules
+dependencies[] = rules
+; Statistics
+dependencies[] = googleanalytics
+; Taxonomy
+dependencies[] = taxonomy_csv
+; UUID
+dependencies[] = uuid
+; User interface
+dependencies[] = imce_wysiwyg
+dependencies[] = jcarousel
+dependencies[] = jquery_update
+dependencies[] = osu_skins
+dependencies[] = wysiwyg
+dependencies[] = wysiwyg_spellcheck
+; Views
+dependencies[] = better_exposed_filters
+dependencies[] = views
+dependencies[] = views_bootstrap
+dependencies[] = views_ui
+; Webform
+dependencies[] = webform
+dependencies[] = webform_conditional
+dependencies[] = webform_validation
+; Workbench
+dependencies[] = workbench
+; Features
+dependencies[] = features
+dependencies[] = cos_directory
+dependencies[] = cosine_varnish_cache_purge
+dependencies[] = feature_story
+dependencies[] = video_carousel
