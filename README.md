@@ -6,7 +6,7 @@ looking at all the different sites we have.
 This is the basis for any research site as well
 as department sites.
 
-CoS Profile as extra install tasks, they are
+CoS Profile has extra install tasks, they are
 <ul>
 <li>COS Path Auto</li>
 <li>COS Doug Fir</li>
