@@ -1,7 +1,6 @@
-# cos-install-profile
 College of Science Drupal Install Profile
 =======
-### CoS Install Profile###
+### CoS Install Profile ###
 
 This is the installation profile created after
 looking at all the different sites we have.
