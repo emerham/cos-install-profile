@@ -1,0 +1,633 @@
+<?php
+/**
+ * @file Install file.
+ *
+ */
+/**
+ * Implements hook_install().
+ *
+ * Perform actions to set up the site for this profile.
+ */
+function cos_install() {
+  // Add text Formats from Standards Profile.
+  $filtered_html_format = array(
+    'format' => 'filtered_html',
+    'name' => 'Filtered HTML',
+    'weight' => 0,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // HTML filter.
+      'filter_html' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 2,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $filtered_html_format = (object) $filtered_html_format;
+  filter_format_save($filtered_html_format);
+  // Full HTML Text formats.
+  $full_html_format = array(
+    'format' => 'full_html',
+    'name' => 'Full HTML',
+    'weight' => 1,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 3,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 2,
+        'status' => 1,
+      ),
+    ),
+  );
+  $full_html_format = (object) $full_html_format;
+  filter_format_save($full_html_format);
+  // CKEditor text format.
+  $ckeditor_format = array(
+    'format' => 'ckeditor',
+    'name' => 'CKEditor',
+    'weight' => -1,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 7,
+        'status' => 1,
+      ),
+      'media_filter' => array(
+        'weight' => 5,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 6,
+        'status' => 1,
+      ),
+    ),
+  );
+  $ckeditor_format = (object) $ckeditor_format;
+  filter_format_save($ckeditor_format);
+  // WYSIWYG settings.
+  $wysiwyg_options = array(
+    'default' => 1,
+    'user_choose' => 0,
+    'show_toggle' => 1,
+    'theme' => 'advanced',
+    'language' => 'en',
+    'buttons' =>
+      array(
+        'default' =>
+          array(
+            'Bold' => 1,
+            'Italic' => 1,
+            'Underline' => 1,
+            'Strike' => 1,
+            'JustifyLeft' => 1,
+            'JustifyCenter' => 1,
+            'JustifyRight' => 1,
+            'JustifyBlock' => 1,
+            'BidiLtr' => 1,
+            'BidiRtl' => 1,
+            'BulletedList' => 1,
+            'NumberedList' => 1,
+            'Outdent' => 1,
+            'Indent' => 1,
+            'Undo' => 1,
+            'Redo' => 1,
+            'Link' => 1,
+            'Unlink' => 1,
+            'Anchor' => 1,
+            'Image' => 1,
+            'TextColor' => 1,
+            'BGColor' => 1,
+            'Superscript' => 1,
+            'Subscript' => 1,
+            'Blockquote' => 1,
+            'Source' => 1,
+            'HorizontalRule' => 1,
+            'Cut' => 1,
+            'Copy' => 1,
+            'Paste' => 1,
+            'PasteText' => 1,
+            'PasteFromWord' => 1,
+            'ShowBlocks' => 1,
+            'RemoveFormat' => 1,
+            'SpecialChar' => 1,
+            'Format' => 1,
+            'Font' => 1,
+            'FontSize' => 1,
+            'Styles' => 1,
+            'Table' => 1,
+            'SelectAll' => 1,
+            'Find' => 1,
+            'Replace' => 1,
+            'Smiley' => 1,
+            'CreateDiv' => 1,
+            'Iframe' => 1,
+            'Maximize' => 1,
+            'SpellChecker' => 1,
+            'Scayt' => 1,
+            'About' => 1,
+            'Templates' => 1,
+          ),
+        'imce' =>
+          array(
+            'imce' => 1,
+          ),
+        'aspell' =>
+          array(
+            'SpellCheck' => 1,
+          ),
+        'drupal' =>
+          array(
+            'media' => 1,
+            'break' => 1,
+          ),
+      ),
+    'toolbar_loc' => 'top',
+    'toolbar_align' => 'left',
+    'path_loc' => 'bottom',
+    'resizing' => 1,
+    'default_toolbar_grouping' => 1,
+    'verify_html' => 1,
+    'preformatted' => 1,
+    'convert_fonts_to_spans' => 1,
+    'remove_linebreaks' => 1,
+    'apply_source_formatting' => 1,
+    'paste_auto_cleanup_on_paste' => 1,
+    'block_formats' => 'p,address,pre,h2,h3,h4,h5,h6,div',
+    'css_setting' => 'theme',
+    'css_path' => '',
+    'css_classes' => '',
+  );
+  db_insert('wysiwyg')
+    ->fields(array(
+      'format' => 'ckeditor',
+      'editor' => 'ckeditor',
+      'settings' => serialize($wysiwyg_options),
+    ))
+    ->execute();
+  // Enable some cos blocks.
+  $default_theme = 'doug_fir';
+  $admin_theme = 'adminimal';
+  // Disable all themes.
+  db_update('system')
+    ->fields(array('status' => 0))
+    ->condition('type', 'theme')
+    ->execute();
+  // Enable $default_theme.
+  db_update('system')
+    ->fields(array('status' => 1))
+    ->condition('type', 'theme')
+    ->condition('name', $default_theme)
+    ->execute();
+  // Enable $admin_theme.
+  db_update('system')
+    ->fields(array('status' => 1))
+    ->condition('type', 'theme')
+    ->condition('name', $admin_theme)
+    ->execute();
+  variable_set('theme_default', $default_theme);
+  variable_set('admin_theme', $admin_theme);
+  // Activate admin theme when editing a node.
+  variable_set('node_admin_theme', '1');
+  $blocks = array(
+    array(
+      'module' => 'menu',
+      'delta' => 'osu-top-hat',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'top',
+      'visibility' => 0,
+      'pages' => '',
+      'cache' => -1,
+      'title' => '',
+    ),
+    array(
+      'module' => 'system',
+      'delta' => 'main',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'content',
+      'visibility' => 0,
+      'pages' => '',
+      'cache' => -1,
+      'title' => '',
+    ),
+    array(
+      'module' => 'system',
+      'delta' => 'navigation',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'sidebar_first',
+      'visibility' => 0,
+      'pages' => '',
+      'cache' => -1,
+      'title' => '',
+    ),
+    array(
+      'module' => 'cas_redirect',
+      'delta' => 'login_cas_redirect',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'footer',
+      'visibility' => 0,
+      'pages' => '',
+      'cache' => -1,
+      'title' => '',
+    ),
+    array(
+      'module' => 'views',
+      'delta' => 'video_view-block_1',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'pre_footer',
+      'visibility' => 1,
+      'pages' => '<front>',
+      'cache' => -1,
+      'title' => '',
+    ),
+    array(
+      'module' => 'views',
+      'delta' => 'feature_story-block',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'features',
+      'visibility' => 1,
+      'pages' => '<front>',
+      'cache' => -1,
+      'title' => '',
+    ),
+    array(
+      'module' => 'nice_menus',
+      'delta' => '1',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'nav',
+      'visibility' => 0,
+      'pages' => '',
+      'cache' => -1,
+      'title' => '<none>',
+    ),
+    array(
+      'module' => 'system',
+      'delta' => 'help',
+      'theme' => $default_theme,
+      'status' => 1,
+      'weight' => -10,
+      'region' => 'help',
+      'visibility' => 0,
+      'pages' => '',
+      'cache' => -1,
+      'title' => '',
+    ),
+    array(
+      'module' => 'system',
+      'delta' => 'main',
+      'theme' => $admin_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'content',
+      'visibility' => 0,
+      'pages' => '',
+      'cache' => -1,
+      'title' => '',
+    ),
+    array(
+      'module' => 'system',
+      'delta' => 'help',
+      'theme' => $admin_theme,
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'help',
+      'visibility' => 0,
+      'pages' => '',
+      'cache' => -1,
+      'title' => '',
+    ),
+  );
+  // Drop system / user blocks to ensure correct building.
+  db_delete('block')->condition('module', 'system')->execute();
+  db_delete('block')->condition('module', 'user')->execute();
+  // Add in our blocks defined above.
+  $query = db_insert('block')->fields(
+    array(
+      'module',
+      'delta',
+      'theme',
+      'status',
+      'weight',
+      'region',
+      'visibility',
+      'pages',
+      'cache',
+      'title',
+    ));
+  foreach ($blocks as $block) {
+    $query->values($block);
+  }
+  $query->execute();
+
+  // Insert default pre-defined node types into the database. For a complete
+  // list of available node type attributes, refer to the node type API
+  // documentation at: http://api.drupal.org/api/HEAD/function/hook_node_info.
+  $types = array(
+    array(
+      'type' => 'page',
+      'name' => st('Basic page'),
+      'base' => 'node_content',
+      'description' => st("Use <em>Basic page</em> for basic page content."),
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+    ),
+    array(
+      'type' => 'article',
+      'name' => st('Article'),
+      'base' => 'node_content',
+      'description' => st('Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'),
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+    ),
+  );
+
+  foreach ($types as $type) {
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+    node_add_body_field($type);
+  }
+
+  // Insert default pre-defined RDF mapping into the database.
+  $rdf_mappings = array(
+    array(
+      'type' => 'node',
+      'bundle' => 'page',
+      'mapping' => array(
+        'rdftype' => array('foaf:Document'),
+      ),
+    ),
+    array(
+      'type' => 'node',
+      'bundle' => 'article',
+      'mapping' => array(
+        'field_image' => array(
+          'predicates' => array('og:image', 'rdfs:seeAlso'),
+          'type' => 'rel',
+        ),
+        'field_tags' => array(
+          'predicates' => array('dc:subject'),
+          'type' => 'rel',
+        ),
+      ),
+    ),
+  );
+  foreach ($rdf_mappings as $rdf_mapping) {
+    rdf_mapping_save($rdf_mapping);
+  }
+
+  // Default "Page" to not be promoted and have comments disabled.
+  variable_set('node_options_page', array('status'));
+
+  // Don't display date and author information for "Page" nodes by default.
+  variable_set('node_submitted_page', FALSE);
+
+  // Create a default vocabulary named "Tags", enabled for the 'article' content type.
+  $description = st('Use tags to group articles on similar topics into categories.');
+  $help = st('Enter a comma-separated list of words to describe your content.');
+  $vocabulary = (object) array(
+    'name' => st('Tags'),
+    'description' => $description,
+    'machine_name' => 'tags',
+    'help' => $help,
+
+  );
+  taxonomy_vocabulary_save($vocabulary);
+
+  $field = array(
+    'field_name' => 'field_' . $vocabulary->machine_name,
+    'type' => 'taxonomy_term_reference',
+    // Set cardinality to unlimited for tagging.
+    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    'settings' => array(
+      'allowed_values' => array(
+        array(
+          'vocabulary' => $vocabulary->machine_name,
+          'parent' => 0,
+        ),
+      ),
+    ),
+  );
+  field_create_field($field);
+
+  $instance = array(
+    'field_name' => 'field_' . $vocabulary->machine_name,
+    'entity_type' => 'node',
+    'label' => 'Tags',
+    'bundle' => 'article',
+    'description' => $vocabulary->help,
+    'widget' => array(
+      'type' => 'taxonomy_autocomplete',
+      'weight' => -4,
+    ),
+    'display' => array(
+      'default' => array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ),
+      'teaser' => array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ),
+    ),
+  );
+  field_create_instance($instance);
+
+  // Create an image field named "Image", enabled for the 'article' content type.
+  // Many of the following values will be defaulted, they're included here as an illustrative examples.
+  // See http://api.drupal.org/api/function/field_create_field/7
+
+  $field = array(
+    'field_name' => 'field_image',
+    'type' => 'image',
+    'cardinality' => 1,
+    'locked' => FALSE,
+    'indexes' => array('fid' => array('fid')),
+    'settings' => array(
+      'uri_scheme' => 'public',
+      'default_image' => FALSE,
+    ),
+    'storage' => array(
+      'type' => 'field_sql_storage',
+      'settings' => array(),
+    ),
+  );
+  field_create_field($field);
+
+  // Many of the following values will be defaulted, they're included here as an illustrative examples.
+  // See http://api.drupal.org/api/function/field_create_instance/7
+  $instance = array(
+    'field_name' => 'field_image',
+    'entity_type' => 'node',
+    'label' => 'Image',
+    'bundle' => 'article',
+    'description' => st('Upload an image to go with this article.'),
+    'required' => FALSE,
+
+    'settings' => array(
+      'file_directory' => 'field/image',
+      'file_extensions' => 'png gif jpg jpeg',
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'alt_field' => TRUE,
+      'title_field' => '',
+    ),
+
+    'widget' => array(
+      'type' => 'image_image',
+      'settings' => array(
+        'progress_indicator' => 'throbber',
+        'preview_image_style' => 'thumbnail',
+      ),
+      'weight' => -1,
+    ),
+
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'type' => 'image',
+        'settings' => array('image_style' => 'large', 'image_link' => ''),
+        'weight' => -1,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'type' => 'image',
+        'settings' => array('image_style' => 'medium', 'image_link' => 'content'),
+        'weight' => -1,
+      ),
+    ),
+  );
+  field_create_instance($instance);
+  variable_set('comment_article', '1');
+  variable_set('comment_page', '1');
+  variable_set('comment_biblio', '1');
+  variable_set('comment_feature_story', '1');
+  variable_set('comment_feed', '1');
+  variable_set('comment_video', '1');
+  variable_set('comment_webform', '1');
+  variable_set('comment_people_osu', '1');
+  // Create a Home link in the main menu.
+  $item = array(
+    'link_title' => st('Home'),
+    'link_path' => '<front>',
+    'menu_name' => 'main-menu',
+  );
+  menu_link_save($item);
+  // From shortcut.install, add shortcuts to the default set on install.
+  $shortcut_set = shortcut_set_load(SHORTCUT_DEFAULT_SET_NAME);
+  $shortcut_set->links = NULL;
+  $shortcut_set->links = array(
+    array(
+      'link_path' => 'admin/appearance/settings',
+      'link_title' => st('Theme'),
+      'weight' => -17,
+    ),
+  );
+  shortcut_set_save($shortcut_set);
+  // Create a default role for site administrators, with all available permissions assigned.
+  $admin_role = new stdClass();
+  $admin_role->name = 'administrator';
+  $admin_role->weight = 10;
+  user_role_save($admin_role);
+  user_role_grant_permissions($admin_role->rid, array_keys(module_invoke_all('permission')));
+  // Set this as the administrator role.
+  variable_set('user_admin_role', $admin_role->rid);
+
+  // Assign user 1 the "administrator" role.
+  db_insert('users_roles')
+    ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
+    ->execute();
+    // Update the menu router information.
+  menu_rebuild();
+  // Revert features to ensure they are all installed.
+  $features = array(
+    'cosine_varnish_cache_purge',
+    'video_carousel',
+    'feature_story',
+  );
+  features_revert($features);
+  // CAS settings.
+  variable_set('cas_server', 'login.oregonstate.edu');
+  variable_set('cas_uri', '/cas');
+  variable_set('cas_login_form', '2');
+  variable_set('cas_login_drupal_invite', 'Cancel ONID login');
+  variable_set('cas_login_invite', 'Login USING ONID');
+  variable_set('cas_login_drupal_invite', 'Cancel ONID login');
+  variable_set('cas_login_message', 'Logged in via ONID as %cas_username.');
+  variable_set('cas_login_redir_message', 'You will be redirected to the secure ONID login page.');
+  variable_set('cas_hide_password', '1');
+  variable_set('cas_version', 'S1');
+  variable_set('cas_domain', 'oregonstate.edu');
+  variable_set('cas_first_login_destination', 'cas');
+  variable_set('cas_user_register', '0');
+  // jQuery Updte settings.
+  variable_set('jquery_update_jquery_version', '1.8');
+  // Nice Menus.
+  variable_set('nice_menus_menu_1', 'main-menu:0');
+  variable_set('nice_menus_type_1', 'down');
+  variable_set('nice_menus_name_1', 'Nice menu: Main Menu');
+  variable_set('nice_menus_sf_delay', '800');
+  variable_set('nice_menus_sf_speed', 'fast');
+  // Admin Menu Settings.
+  $admin_menu_settings = array(
+    'admin_menu.icon' => TRUE,
+    'admin_menu.menu' => TRUE,
+    'admin_menu.users' => TRUE,
+    'admin_menu.account' => TRUE,
+    'admin_menu.search' => FALSE,
+  );
+  variable_set('admin_menu_components', $admin_menu_settings);
+  // TODO add imports
+  // http://cgit.drupalcode.org/recruiter/tree/recruiter.install_vocabularies.inc
+  // drush taxocsv-import /var/www/drupal7/profiles/cos/content/position_titles.csv  flat --vocabulary_id=position_titles --enclosure='"' --vocabulary_target=existing
+  // drush taxocsv-import /var/www/drupal7/profiles/cos/content/primary_categorization.csv   flat --vocabulary_id=primary_categorization --enclosure='"' --vocabulary_target=existing
+  // drush ne-import --file=/var/www/drupal7/profiles/cos/content/node-data.export
+  // Ignore any rebuild messages.
+  node_access_needs_rebuild(FALSE);
+  // Ignore any other install messages.
+  drupal_get_messages();
+}
