@@ -1,8 +1,9 @@
 <?php
+
 /**
  * @file Install file.
- *
  */
+
 /**
  * Implements hook_install().
  *
@@ -479,7 +480,6 @@ function cos_install() {
   // Create an image field named "Image", enabled for the 'article' content type.
   // Many of the following values will be defaulted, they're included here as an illustrative examples.
   // See http://api.drupal.org/api/function/field_create_field/7
-
   $field = array(
     'field_name' => 'field_image',
     'type' => 'image',
@@ -581,7 +581,7 @@ function cos_install() {
   db_insert('users_roles')
     ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
     ->execute();
-    // Update the menu router information.
+  // Update the menu router information.
   menu_rebuild();
   // Revert features to ensure they are all installed.
   $features = array(

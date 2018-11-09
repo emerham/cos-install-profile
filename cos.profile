@@ -1,10 +1,12 @@
 <?php
+
 /**
  * @file
  * COS Profile, Profile file.
  */
 
 if (!function_exists("system_form_install_configure_form_alter")) {
+
   /**
    * Implements hook_form_FORM_ID_alter().
    *
@@ -18,9 +20,11 @@ if (!function_exists("system_form_install_configure_form_alter")) {
     $form['server_settings']['site_default_country']['#default_value'] = 'US';
     $form['server_settings']['date_default_timezone']['#default_value'] = 'America/Los_Angeles';
   }
+
 }
 
 if (!function_exists("system_form_install_select_profile_form_alter")) {
+
   /**
    * Implements hook_form_FORM_ID_alter().
    *
@@ -31,7 +35,9 @@ if (!function_exists("system_form_install_select_profile_form_alter")) {
       $form['profile'][$key]['#value'] = 'cos';
     }
   }
+
 }
+
 /**
  * Implements hook_install_tasks().
  */
@@ -69,7 +75,6 @@ function cos_install_tasks($install_state) {
 /**
  * Configure Permissions and roles for a site.
  */
-
 function cos_perms() {
   // Add User Roles.
   // Site Admin Permissions.
@@ -323,7 +328,6 @@ function cos_perms() {
 /**
  * Setup Doug Fir Theme.
  */
-
 function cos_doug_fir() {
   // Doug Fir Theme settings.
   $doug_fir_settings = array(
@@ -364,7 +368,6 @@ function cos_doug_fir() {
 /**
  * Setup Path Auto aliases.
  */
-
 function cos_path_auto() {
   // URL Patterns.
   variable_set('pathauto_node_article_pattern', 'articles/[node:title]');
@@ -377,8 +380,11 @@ function cos_path_auto() {
   variable_set('pathauto_node_people_osu_pattern', 'people/[node:title]');
 }
 
+/**
+ *
+ */
 function cos_front_page_custom() {
-  // Home
+  // Home.
   $body = '<h3>Welcome to your new Drupal site</h3>';
   $body .= '<p>This is your front page, <strong>do not</strong> delete it.';
   $body .= 'You can edit this page, remove this content, and add your own.';
@@ -386,38 +392,44 @@ function cos_front_page_custom() {
 
   $node = new stdClass();
 
-  //Main Node Fields
+  // Main Node Fields.
   $node->name = 'Home';
   $node->title = $node->name;
-  $node->type = 'page'; //This can be any node type
+  // This can be any node type.
+  $node->type = 'page';
   $node->created = strtotime('now');
   $node->changed = $node->created;
-  $node->promote = 0; // Display on front page ? 1 : 0
-  $node->sticky = 0; // Display top of page ? 1 : 0
-  $node->status = 1; // Published ? 1 : 0
+  // Display on front page ? 1 : 0.
+  $node->promote = 0;
+  // Display top of page ? 1 : 0.
+  $node->sticky = 0;
+  // Published ? 1 : 0.
+  $node->status = 1;
   $node->language = 'en';
   $node->uid = 1;
 
   $node->body['und'][0]['format'] = 'ckeditor';
   $node->body['und'][0]['value'] = $body;
-  //$node->og_group_ref['und'][0]['target_id']  = $gid;
-
+  // $node->og_group_ref['und'][0]['target_id']  = $gid;.
   node_save($node);
 
-  // Set this has the front page
+  // Set this has the front page.
   variable_set('site_frontpage', 'node/' . $node->nid);
 
   /*
-    // Drupal7 creates the alias to this new node as content/home
-    // We want to change it to just home
-    $res = db_update('url_alias')
-      ->fields(array('alias' => 'home'))
-      ->condition('alias', 'content/home')
-      ->execute();
-  */
+  // Drupal7 creates the alias to this new node as content/home
+  // We want to change it to just home
+  $res = db_update('url_alias')
+  ->fields(array('alias' => 'home'))
+  ->condition('alias', 'content/home')
+  ->execute();
+   */
   drupal_set_message(t('The default pages have been created.'));
 }
 
+/**
+ *
+ */
 function cos_add_extra_content() {
   $form = array();
   $form['into'] = array(
@@ -444,6 +456,7 @@ function cos_add_extra_content() {
 
 /**
  * Implements hook_submit().
+ *
  * @param $form
  * @param $form_state
  */
@@ -452,16 +465,20 @@ function cos_add_extra_content_submit($form, &$form_state) {
   foreach ($boxes_checked as $content_options) {
     switch ($content_options) {
       case 'video':
-        //cos_content_video();
+        // cos_content_video();
         break;
+
       case 'lab':
         cos_content_lab();
         break;
+
       case 'feat_story':
         break;
+
       case 'contact':
         cos_content_contact();
         break;
+
       case 'bib':
         $my_menu = array(
           'link_path' => 'biblio',
@@ -475,6 +492,7 @@ function cos_add_extra_content_submit($form, &$form_state) {
         menu_link_save($my_menu);
         unset($my_menu);
         break;
+
       default:
         break;
     }
@@ -482,32 +500,35 @@ function cos_add_extra_content_submit($form, &$form_state) {
 }
 
 /**
- * Create The Lab node page
+ * Create The Lab node page.
  */
 function cos_content_lab() {
-  // The Body of the Node
+  // The Body of the Node.
   $body = '<p>Here I will post photos and descriptions of our experimental tool and capabilities. </p>';
 
   $node = new stdClass();
 
-  //The Lab Page
+  // The Lab Page.
   $node->name = 'The Lab';
   $node->title = $node->name;
-  $node->type = 'page'; //This can be any node type
+  // This can be any node type.
+  $node->type = 'page';
   $node->created = strtotime('now');
   $node->changed = $node->created;
-  $node->promote = 0; // Display on front page ? 1 : 0
-  $node->sticky = 0; // Display top of page ? 1 : 0
-  $node->status = 1; // Published ? 1 : 0
+  // Display on front page ? 1 : 0.
+  $node->promote = 0;
+  // Display top of page ? 1 : 0.
+  $node->sticky = 0;
+  // Published ? 1 : 0.
+  $node->status = 1;
   $node->language = 'en';
   $node->uid = 0;
 
   $node->body['und'][0]['format'] = 'ckeditor';
   $node->body['und'][0]['value'] = $body;
-  //$node->og_group_ref['und'][0]['target_id']  = $gid;
-
+  // $node->og_group_ref['und'][0]['target_id']  = $gid;.
   node_save($node);
-  // Create menu link for the node
+  // Create menu link for the node.
   $my_menu = array(
     'link_path' => 'node/' . $node->nid,
     'link_title' => st('The Lab'),
@@ -522,7 +543,7 @@ function cos_content_lab() {
 }
 
 /**
- * Create the Contact us webform
+ * Create the Contact us webform.
  */
 function cos_content_contact() {
   $body = '<p>Please contanct us with any questions.</p>';
@@ -589,20 +610,22 @@ function cos_content_contact() {
     'auto_save' => '0',
     'submit_notice' => '1',
     'submit_text' => '',
-    'submit_limit' => '-1', // User can submit more than once.
+  // User can submit more than once.
+    'submit_limit' => '-1',
     'submit_interval' => '-1',
     'total_submit_limit' => '-1',
     'total_submit_interval' => '-1',
     'record_exists' => TRUE,
     'roles' => array(
-      0 => '1', // Anonymous user can submit this webform.
+  // Anonymous user can submit this webform.
+      0 => '1',
     ),
     'emails' => '',
     'components' => $components,
   );
   // Save the node.
   node_save($node);
-  // Create menu link for the node
+  // Create menu link for the node.
   $my_menu = array(
     'link_path' => 'node/' . $node->nid,
     'link_title' => st('Contact Us'),
@@ -617,13 +640,13 @@ function cos_content_contact() {
 }
 
 /**
- * This adds more videos than it should
+ * This adds more videos than it should.
  */
 function cos_content_video() {
   $body = '<p>Chris Marshall, curator of OSU\'s arthropod collection, takes us on an early morning journey to find an elusive scarab, a northwestern rain beetle.</p>';
   $node = new stdClass();
   $node->type = 'video';
-  //node_object_prepare($node);
+  // node_object_prepare($node);
   $node->title = 'Chris Marshall, Beetles ';
   $node->language = 'en';
   $node->body[LANGUAGE_NONE][0]['value'] = $body;
@@ -662,7 +685,7 @@ function cos_add_onid() {
     '#type' => 'textarea',
     '#title' => st('Site Admins'),
     '#required' => FALSE,
-    '#description' => st('Enter the ONID Usernames, enter delemeted to add')
+    '#description' => st('Enter the ONID Usernames, enter delemeted to add'),
   );
   $form['submit'] = array(
     '#type' => 'submit',
@@ -677,7 +700,7 @@ function cos_add_onid() {
  * Adds roles to newly created accounts.
  */
 function cos_add_onid_submit($form, &$form_state) {
-  require_once(drupal_get_path('module', 'cas') . '/cas.module');
+  require_once drupal_get_path('module', 'cas') . '/cas.module';
   $cas_oid = preg_split('/[\n\r|\r|\n]+/', $form_state['values']['onid_admin']);
   $cos_admin = user_role_load_by_name('administrator');
   $options = array(
@@ -686,7 +709,7 @@ function cos_add_onid_submit($form, &$form_state) {
   foreach ($cas_oid as $oid) {
     // Returns the Object of the user created, don't need to load by name.
     $user = cas_user_register($oid, $options);
-    //$user = user_load_by_name($oid);
+    // $user = user_load_by_name($oid);
     user_multiple_role_edit(array($user->uid), 'add_role', $cos_admin->rid);
   }
   unset($user, $oid, $cos_admin);
